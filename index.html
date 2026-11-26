@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blender Video Studio - Get Your 3D Videos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-secondary: #12121a;
+      --fg: #f0f0f5;
+      --muted: #737383;
+      --accent: #00d4aa;
+      --accent-hover: #00f5c4;
+      --card: #1a1a24;
+      --border: #2a2a3a;
+      --success: #00d4aa;
+      --error: #ff4757;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      margin: 0;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-content {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), #00ffcc);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--bg);
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 16px;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--fg);
+    }
+
+    /* ========================
+       HERO SECTION
+       ======================== */
+    .hero {
+      padding: 180px 20px 120px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent), #00ffcc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+
+    /* ========================
+       PRICING SECTION
+       ======================== */
+    .pricing {
+      padding: 80px 20px;
+    }
+
+    .pricing h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 40px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px 30px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+
+    .card.popular {
+      border-color: var(--accent);
+      position: relative;
+    }
+
+    .card.popular::before {
+      content: 'BEST VALUE';
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      background: var(--accent);
+      color: var(--bg);
+      font-size: 0.625rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+
+    .card-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(0, 212, 170, 0.1);
+      color: var(--accent);
+      border-radius: 20px;
+      font-size: 0.625rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .card-price {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .card-period {
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+
+    .card-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 30px 0;
+    }
+
+    .card-features li {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-features li:last-child {
+      border-bottom: none;
+    }
+
+    .check-icon {
+      color: var(--success);
+      font-size: 0.875rem;
+    }
+
+    .card-features .cross-icon {
+      color: var(--muted);
+    }
+
+    .card-btn {
+      width: 100%;
+      padding: 14px 24px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+
+    .card-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .card.popular .card-btn {
+      background: var(--bg);
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+
+    /* ========================
+       LOGIN SECTION
+       ======================== */
+    .login-section {
+      padding: 80px 20px;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .login-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 40px;
+    }
+
+    .phone-form {
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .phone-input {
+      width: 100%;
+      padding: 20px 30px;
+      font-size: 1.5rem;
+      border: 2px solid var(--border);
+      border-radius: 50px;
+      background: var(--bg);
+      color: var(--fg);
+      margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .phone-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .phone-input::placeholder {
+      color: var(--muted);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 16px 40px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .login-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    /* ========================
+       DASHBOARD SECTION
+       ======================== */
+    .dashboard {
+      padding: 80px 20px;
+    }
+
+    .dashboard h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 40px;
+    }
+
+    .dashboard-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .dashboard-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px 24px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .dashboard-card:hover {
+      border-color: var(--accent);
+    }
+
+    .dashboard-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 16px;
+    }
+
+    .dashboard-card p {
+      color: var(--muted);
+      font-size: 0.875rem;
+      margin-bottom: 24px;
+    }
+
+    .dashboard-card .preview {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 20px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+
+    .dashboard-card .preview span {
+      color: var(--accent);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+    }
+
+    .dashboard-card small {
+      color: var(--muted);
+      font-size: 0.75rem;
+      display: block;
+      margin-top: 8px;
+    }
+
+    /* ========================
+       PROCESS SECTION (89 RS MODEL)
+       ======================== */
+    .process-section {
+      padding: 80px 20px;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .process-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom 32px;
+    }
+
+    .process-steps {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .process-step {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--accent);
+      transition: border-color 0.2s;
+    }
+
+    .process-step.active {
+      border-left-color: var(--error);
+    }
+
+    .process-step.completed {
+      border-left-color: var(--success);
+    }
+
+    .process-step-number {
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      color: var(--bg);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+
+    .process-step.active .process-step-number {
+      background: var(--error);
+    }
+
+    .process-step.completed .process-step-number {
+      background: var(--success);
+    }
+
+    .process-step h4 {
+      margin: 0 0 8px 0;
+      font-size: 1.25rem;
+    }
+
+    .process-step p {
+      color: var(--muted);
+      font-size: 0.875rem;
+      margin: 0;
+    }
+
+    /* ========================
+       49 RS MODEL FLOW
+       ======================== */
+    .model-49-flow {
+      padding: 80px 20px;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .model-49-flow h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom 32px;
+    }
+
+    .flow-steps {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .flow-step {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 16px;
+      border-left: 4px solid var(--accent);
+    }
+
+    .flow-step.completed {
+      border-left-color: var(--success);
+    }
+
+    .flow-step-number {
+      width: 30px;
+      height: 30px;
+      background: var(--accent);
+      color: var(--bg);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .flow-step.completed .flow-step-number {
+      background: var(--success);
+    }
+
+    /* ========================
+       PAYMENT/COUNTERS SECTION
+       ======================== */
+    .counters-section {
+      padding: 80px 20px;
+    }
+
+    .counters-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom 32px;
+    }
+
+    .counters {
+      max-width: 600px;
+      margin: 0 auto;
+      display: grid;
+      gap: 24px;
+    }
+
+    .counter {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .counter-number {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .counter-label {
+      color: var(--muted);
+      font-size: 0.875rem;
+      margin-top: 8px;
+    }
+
+    /* ========================
+       INSTAGRAM SECTION
+       ======================== */
+    .instagram-section {
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .instagram-section h2 {
+      font-size: 2rem;
+      margin-bottom 32px;
+    }
+
+    .instagram-handle {
+      background: var(--bg-secondary);
+      padding: 24px;
+      border-radius: 12px;
+      margin: 0 auto 24px;
+      max-width: 300px;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .instagram-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .insta-link {
+      display: inline-block;
+      padding: 12px 24px;
+      background: var(--accent);
+      color: var(--bg);
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 16px;
+    }
+
+    .insta-link:hover {
+      background: var(--accent-hover);
+    }
+
+    /* ========================
+       QR/ PAYMENT METHODS
+       ======================== */
+    .payment-section {
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .payment-section h2 {
+      font-size: 2rem;
+      margin-bottom 32px;
+    }
+
+    .payment-methods {
+      display: inline-flex;
+      gap: 24px;
+      margin: 0 auto 32px;
+      max-width: 500px;
+    }
+
+    .payment-method {
+      padding: 20px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      width: 150px;
+      text-decoration: none;
+      color: var(--fg);
+      transition: background 0.2s;
+    }
+
+    .payment-method:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .payment-method .method-name {
+      font-size: 0.875rem;
+      margin-bottom: 8px;
+      display: block;
+      text-align: center;
+    }
+
+    .payment-method .method-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      display: block;
+      text-align: center;
+    }
+
+    .payment-method .method-desc {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 4px;
+      text-align: center;
+      font-size: 0.75rem;
+    }
+
+    /* ========================
+       FOOTER
+       ======================== */
+    footer {
+      padding: 40px 20px;
+      background: var(--bg-secondary);
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+
+    /* ========================
+       RESPONSIVE
+       ======================== */
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .stats {
+        gap: 20px;
+      }
+
+      .stat-number {
+        font-size: 1.5rem;
+      }
+
+      .payment-methods {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .payment-method {
+        width: 100%;
+      }
+
+      .counters {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .counters {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content container">
+      <a href="#" class="logo">
+        <div class="logo-icon">VS</div>
+        <span>Blender Vid Studio</span>
+      </a>
+      <nav>
+        <a href="#plans">Plans</a>
+        <a href="#login">Login</a>
+        <a href="#dashboard">Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>Get your <span>3D Blender animation</span> video and upload on YouTube get millions of views</h1>
+      <p>Try for 49 Rs - start today and share your creativity with the world</p>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-number">49</div>
+          <div class="stat-label">Rs for short video</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">89</div>
+          <div class="stat-label">Rs full package</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="pricing" id="plans">
+    <div class="container">
+      <h2>Choose Your Plan</h2>
+      <p style="text-align: center; color: var(--muted); max-width: 600px; margin: 0 auto 50px;">Select the option that fits your needs</p>
+
+      <div class="cards">
+        <!-- 49 Rs Card -->
+        <div class="card popular" id="card-49">
+          <span class="card-tag">Limited</span>
+          <h3>Short Video (60 sec)</h3>
+          <div class="card-price">49 Rs</div>
+          <div class="card-period">per video</div>
+          <ul class="card-features">
+            <li><span class="check-icon">✓</span> Ready-to-publish short video</li>
+            <li><span class="check-icon">✓</span> Blender render included</li>
+            <li><span class="check-icon">✓</span> 60 seconds duration</li>
+          </ul>
+          <button class="card-btn" onclick="start49Process()">Order Now</button>
+        </div>
+
+        <!-- 89 Rs Card -->
+        <div class="card" id="card-89">
+          <span class="card-tag">Premium</span>
+          <h3>Full Process Package</h3>
+          <div class="card-price">89 Rs</div>
+          <div class="card-period">one-time</div>
+          <ul class="card-features">
+            <li><span class="check-icon">✓</script> Complete script-to-video process guide</li>
+            <li><span class="check-icon">✓</span> Step-by-step video making instructions</li>
+            <li><span class="check-icon">✓</span> Get your process file automatically after payment</li>
+            <li><span class="check-icon">✓</span> Boost channel to thousands/millions of views</li>
+          </ul>
+          <button class="card-btn" onclick="start89Process()">Get My Process</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+     49 RS MODEL FLOW
+     ======================== -->
+  <section class="model-49-flow" id="model-49-flow" style="display: none;">
+    <div class="container">
+      <h2>49 Rs Model - Process Flow</h2>
+      <div class="flow-steps">
+        <!-- Step 1: User sends script to Insta -->
+        <div class="flow-step" id="flow-1">
+          <div class="flow-step-number">1</div>
+          <h4>Send Your Script</h4>
+          <p>Message your script on Instagram: <strong>@helpfull110</strong></p>
+          <p>Include your name and audio length preference</p>
+        </div>
+
+        <!-- Step 2: Admin processes -->
+        <div class="flow-step" id="flow-2">
+          <div class="flow-step-number">2</div>
+          <h4>Admin Processes</h4>
+          <p>Admin receives script on Insta @helpfull110</p>
+          <p>Creates video using Blender on laptop</p>
+          <p>Video rendered & ready</p>
+        </div>
+
+        <!-- Step 3: Payment confirmation -->
+        <div class="flow-step" id="flow-3">
+          <div class="flow-step-number">3</div>
+          <h4>Pay 49 Rs</h4>
+          <p>Click payment method below</p>
+          <p>Money comes to your PhonePe/GPay/bank</p>
+        </div>
+
+        <!-- Step 4: Access given -->
+        <div class="flow-step" id="flow-4">
+          <div class="flow-step-number">4</div>
+          <h4>Access Given</h4>
+          <p>Video sent to user after payment</p>
+          <p>User uploads on YouTube</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+     89 RS PROCESS SECTION
+     ======================== -->
+  <section class="process-section" id="process-section" style="display: none;">
+    <div class="container">
+      <h2>89 Rs Full Process Package</h2>
+      <p style="text-align: center; color: var(--muted); max-width: 600px; margin: 0 auto 40px;">
+        Complete script-to-video process guide. You'll get step-by-step instructions.
+      </p>
+
+      <div class="process-steps">
+        <!-- Step 1: Laptop requirement -->
+        <div class="process-step" id="step-1">
+          <div class="process-step-number">1</div>
+          <h4>You Need a Laptop</h4>
+          <p>Ensure you have a laptop capable of running Blender</p>
+          <p>Minimum 8GB RAM recommended</p>
+        </div>
+
+        <!-- Step 2: Install Blender -->
+        <div class="process-step" id="step-2">
+          <div class="process-step-number">2</div>
+          <h4>Install Blender</h4>
+          <p>Download Blender from blender.org</p>
+          <p>Install on your laptop</p>
+          <p>Free and open-source</p>
+        </div>
+
+        <!-- Step 3: Get process file -->
+        <div class="process-step" id="step-3">
+          <div class="process-step-number">3</div>
+          <h4>Receive Process Guide</h4>
+          <p>After payment, you'll receive the complete guide</p>
+          <p>Step-by-step video creation instructions</p>
+          <p>Includes script writing & audio setup</p>
+        </div>
+
+        <!-- Step 4: Create your video -->
+        <div class="process-step" id="step-4">
+          <div class="process-step-number">4</div>
+          <h4>Create Your Video</h4>
+          <p>Follow the process guide</p>
+          <p>Use Blender to render your animation</p>
+          <p>Add audio (ElevenLabs or your own)</p>
+        </div>
+
+        <!-- Step 5: Upload & boost -->
+        <div class="process-step" id="step-5">
+          <div class="process-step-number">5</div>
+          <h4>Upload & Boost</h4>
+          <p>Upload to YouTube</p>
+          <p>Good content can reach thousands/millions of views</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+     COUNTERS / USER LIMITS
+     ======================== -->
+  <section class="counters-section" id="counters-section" style="display: none;">
+    <div class="container">
+      <h2>User Count & Limits</h2>
+      <p style="text-align: center; color: var(--muted); max-width: 600px; margin: 0 auto 40px;">
+        These limits help manage workload and laptop capacity
+      </p>
+
+      <div class="counters">
+        <div class="counter">
+          <div class="counter-number" id="counter-49">0</div>
+          <div class="counter-label">49 Rs Users This Week</div>
+        </div>
+        <div class="counter">
+          <div class="counter-number" id="counter-89">0</div>
+          <div class="counter-label">89 Rs Users This Week</div>
+        </div>
+      </div>
+
+      <p style="text-align: center; color: var(--muted); margin-top: 24px; font-size: 0.875rem;">
+        <strong>49 Rs Model:</strong> Stops at 5 users per week<br>
+        <strong>89 Rs Model:</strong> Stops at 10 users per week
+      </p>
+    </div>
+  </section>
+
+  <!-- ========================
+     INSTAGRAM SECTION
+     ======================== -->
+  <section class="instagram-section">
+    <div class="container">
+      <h2>Contact via Instagram</h2>
+      <div class="instagram-handle">@helpfull110</div>
+      <p class="instagram-desc">
+        Send your script, name, and audio length preference here. Admin will process your request.
+      </p>
+      <a href="https://instagram.com/helpfull110" target="_blank" class="insta-link">Visit Instagram Profile</a>
+    </div>
+  </section>
+
+  <!-- ========================
+     PAYMENT SECTION
+     ======================== -->
+  <section class="payment-section" id="payment-section" style="display: none;">
+    <div class="container">
+      <h2>Complete Your Payment</h2>
+      <p style="text-align: center; color: var(--muted); max-width: 600px; margin: 0 auto 40px;">
+        Choose your payment method below
+      </p>
+
+      <div class="payment-methods">
+        <a href="#" class="payment-method" onclick="processPayment('phonepe')">
+          <div class="method-icon">📱</div>
+          <div class="method-name">PhonePe</div>
+          <div class="method-desc">Scan QR to pay 49 Rs</div>
+        </a>
+        <a href="#" class="payment-method" onclick="processPayment('gpay')">
+          <div class="method-icon">💳</div>
+          <div class="method-name">GPay</div>
+          <div class="method-desc">Scan QR to pay 49 Rs</div>
+        </a>
+        <a href="#" class="payment-method" onclick="processPayment('bank')">
+          <div class="method-icon">📥</div>
+          <div class="method-name">Bank Transfer</div>
+          <div class="method-desc">Direct to account</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+     DASHBOARD SECTION
+     ======================== -->
+  <section class="dashboard" id="dashboard" style="display: none;">
+    <div class="container">
+      <h2>Your Dashboard</h2>
+      <p style="text-align: center; color: var(--muted); max-width: 600px; margin: 0 auto 40px;">
+        After login, you'll see your content access
+      </p>
+
+      <div class="dashboard-container">
+        <div class="dashboard-card">
+          <h3>Your Content</h3>
+          <p>Based on your purchase, you'll see:</p>
+          <div class="preview"><span>One line at a time</span></div>
+          <p style="color: var(--muted); font-size: 0.875rem; margin-top: 8px;">Read just one line, then click to proceed</p>
+          <small>Phone verified</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+     FOOTER
+     ======================== -->
+  <footer>
+    <div class="container">
+      <p>Blender Video Studio • Get your 3D Blender animation video and upload on YouTube get millions of views • Try for 49 Rs • Contact: @helpfull110</p>
+    </div>
+  </footer>
+
+  <script>
+    // ========================
+    // STATE MANAGEMENT
+    // ========================
+    const WEEKLY_LIMITS = {
+      '49': { limit: 5, section: 'model-49-flow', counterId: 'counter-49' },
+      '89': { limit: 10, section: 'process-section', counterId: 'counter-89' }
+    };
+
+    let weekStart = new Date();
+    weekStart.setHours(0, 0, 0, 0);
+    weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Start of week (Sunday)
+
+    // Load counters from localStorage or initialize
+    let counters = {
+      '49': parseInt(localStorage.getItem('49_counter') || '0', 10),
+      '89': parseInt(localStorage.getItem('89_counter') || '0', 10)
+    };
+
+    // Check if new week - reset if needed
+    const currentWeek = weekStart.toISOString().split('T')[0];
+    if (localStorage.getItem('week_key') !== currentWeek) {
+      counters = { '49': 0, '89': 0 };
+      localStorage.setItem('week_key', currentWeek);
+    }
+
+    // Save counters
+    function saveCounters() {
+      localStorage.setItem('49_counter', counters['49']);
+      localStorage.setItem('89_counter', counters['89']);
+      localStorage.setItem('week_key', currentWeek);
+      updateCountersDisplay();
+    }
+
+    // Update counters display
+    function updateCountersDisplay() {
+      document.getElementById('counter-49').textContent = counters['49'];
+      document.getElementById('counter-89').textContent = counters['89'];
+
+      // Check limits and potentially hide sections
+      if (counters['49'] >= WEEKLY_LIMITS['49'].limit) {
+        document.getElementById('card-49').style.display = 'none';
+        document.getElementById('model-49-flow').style.display = 'none';
+        document.getElementById('counters-section').style.display = 'block';
+        showNotification('49 Rs model paused - 5 users limit reached this week', 'error');
+      }
+
+      if (counters['89'] >= WEEKLY_LIMITS['89'].limit) {
+        document.getElementById('card-89').style.display = 'none';
+        document.getElementById('process-section').style.display = 'none';
+        showNotification('89 Rs model paused - 10 users limit reached this week', 'error');
+      }
+    }
+
+    // ========================
+    // NOTIFICATIONS
+    // ========================
+    function showNotification(message, type) {
+      const notif = document.createElement('div');
+      notif.style.position = 'fixed';
+      notif.style.top = '20px';
+      notif.style.right = '20px';
+      notif.style.padding = '12px 24px';
+      notif.style.background = type === 'success' ? 'var(--accent)' : 'var(--error)';
+      notif.style.color = type === 'success' ? 'var(--bg)' : '#fff';
+      notif.style.borderRadius = '8px';
+      notif.style.zIndex = '1000';
+      notif.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+      notif.style.maxWidth = '300px';
+      notif.textContent = message;
+      document.body.appendChild(notif);
+
+      setTimeout(() => notif.remove(), 5000);
+    }
+
+    // ========================
+    // 49 RS PROCESS START
+    // ========================
+    function start49Process() {
+      // Increment counter
+      counters['49']++;
+      saveCounters();
+
+      // Show phone login
+      document.getElementById('card-49').style.display = 'none';
+      document.getElementById('model-49-flow').style.display = 'block';
+      document.getElementById('payment-section').style.display = 'block';
+
+      // Scroll to flow
+      document.getElementById('flow-1').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ========================
+    // 89 RS PROCESS START
+    // ========================
+    function start89Process() {
+      // Increment counter
+      counters['89']++;
+      saveCounters();
+
+      // Show process section, hide pricing
+      document.getElementById('card-89').style.display = 'none';
+      document.getElementById('process-section').style.display = 'block';
+      document.getElementById('counters-section').style.display = 'block';
+
+      // Reset process steps
+      document.querySelectorAll('.process-step').forEach((step, i) => {
+        step.classList.remove('active', 'completed');
+        const num = step.querySelector('.process-step-number');
+        if (num) {
+          num.textContent = i + 1;
+        }
+      });
+
+      // Mark first step active
+      if (document.querySelectorAll('.process-step').length > 0) {
+        document.querySelectorAll('.process-step')[0].classList.add('active');
+      }
+
+      // Scroll to process
+      document.getElementById('step-1').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ========================
+    // PROCESS STEP COMPLETION
+    // ========================
+    function completeProcessStep(stepNumber, model) {
+      const section = model === '49' ? '#model-49-flow' : '#process-section';
+      const steps = document.querySelectorAll(`${section} .process-step`);
+
+      steps.forEach((step, i) => {
+        if (i + 1 === stepNumber) {
+          step.classList.add('completed');
+          step.classList.remove('active');
+          const num = step.querySelector('.process-step-number');
+          if (num) num.textContent = stepNumber;
+        }
+        if (i < stepNumber - 1) {
+          step.classList.add('completed');
+          const num = step.querySelector('.process-step-number');
+          if (num) num.textContent = i + 1;
+        }
+      });
+
+      // Move to next step or finish
+      if (model === '49') {
+        const currentFlowSection = document.getElementById('model-49-flow');
+        const flowSteps = currentFlowSection.querySelectorAll('.flow-step');
+
+        if (stepNumber < flowSteps.length) {
+          flowSteps.forEach((step, i) => {
+            if (i >= stepNumber - 1) {
+              step.classList.remove('completed');
+              const num = step.querySelector('.flow-step-number');
+              if (num) num.textContent = i + 1;
+            }
+          });
+        } else {
+          // All steps complete - show success
+          showNotification('49 Rs process complete! Video will be sent after payment verification.', 'success');
+          setTimeout(() => {
+            document.getElementById('payment-section').style.display = 'block';
+          }, 1000);
+        }
+      } else if (model === '89') {
+        const currentSection = document.getElementById('process-section');
+        const processSteps = currentSection.querySelectorAll('.process-step');
+
+        if (stepNumber < processSteps.length) {
+          processSteps.forEach((step, i) => {
+            if (i >= stepNumber) {
+              step.classList.remove('completed');
+              const num = step.querySelector('.process-step-number');
+              if (num) num.textContent = i + 1;
+            }
+          });
+        } else {
+          // All steps complete
+          showNotification('89 Rs process guide delivered! Check your dashboard.', 'success');
+          setTimeout(() => {
+            // Hide process section, show counters
+            document.getElementById('process-section').style.display = 'none';
+            document.getElementById('counters-section').style.display = 'block';
+            document.getElementById('card-89').style.display = 'none';
+          }, 1000);
+        }
+      }
+    }
+
+    // ========================
+    // PAYMENT PROCESSING
+    // ========================
+    function processPayment(method) {
+      // Show processing state
+      const btn = event.target;
+      const originalText = btn.textContent;
+      btn.textContent = 'Processing...';
+      btn.disabled = true;
+
+      // Simulate payment processing
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.disabled = false;
+
+        // Increment counter based on model
+        // Determine which model was active
+        const card49 = document.getElementById('card-49');
+        const card89 = document.getElementById('card-89');
+
+        if (card49 && card49.style.display !== 'none') {
+          counters['49']++;
+          saveCounters();
+          showNotification('49 Rs payment received via ' + method, 'success');
+          // Show dashboard/login
+          document.getElementById('model-49-flow').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+        } else if (card89 && card89.style.display !== 'none') {
+          counters['89']++;
+          saveCounters();
+          showNotification('89 Rs payment received via ' + method, 'success');
+          // Show dashboard
+          document.getElementById('process-section').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+        } else {
+          // Default - check which is visible
+          showNotification('Payment processed successfully', 'success');
+        }
+
+        // Check limits after payment
+        updateCountersDisplay();
+      }, 1500);
+    }
+
+    // ========================
+    // LOGIN HANDLING
+    // ========================
+    const phoneForm = document.querySelector('.phone-form');
+
+    phoneForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const input = this.querySelector('.phone-input');
+      const phone = input.value.trim();
+
+      if (phone.length >= 10) {
+        // Simulate login
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        input.value = '';
+        showNotification('Login successful! Welcome.', 'success');
+      } else {
+        showNotification('Please enter a valid phone number (10+ digits)', 'error');
+      }
+    });
+
+    // ========================
+    // INSTAGRAM MESSAGE SIMULATION
+    // ========================
+    function simulateInstaMessage() {
+      showNotification(
+        'Message sent to @helpfull110 on Instagram\n\n' +
+        'Please include:\n' +
+        '- Your script\n' +
+        '- Your name\n' +
+        '- Audio length preference\n\n' +
+        'Admin will review and process your request.',
+        'information'
+      );
+    }
+
+    // Auto-hide payment section on load, show based on which card was clicked
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initially hide detailed sections
+      document.getElementById('model-49-flow').style.display = 'none';
+      document.getElementById('process-section').style.display = 'none';
+      document.getElementById('counters-section').style.display = 'none';
+      document.getElementById('payment-section').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'none';
+
+      // Show login section
+      document.querySelector('header').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
